@@ -240,7 +240,26 @@ module.exports = {
 };
 ```
 
-There are some quirks with this approach, including unexpected behavior if multiple such modules circularly depend on each other. As such, I recommend against replacing the object. If you want to assign multiple exports at once, using object literal style definition, you can do this instead:
+There are some quirks with this approach, including unexpected behavior if multiple such modules circularly depend on each other. 
+
+Consider the file `a.js`:
+```js
+const b = require("./b");
+module.exports = {
+    name: "Module A",
+    fromB: b.name,
+};
+```
+
+And `b.js`
+```js
+const a = require("./a");
+module.exports = {
+    name: "Module B",
+    fromA: a.name,
+};
+```
+As such, I recommend against replacing the object. If you want to assign multiple exports at once, using object literal style definition, you can do this instead:
 
 ```js
 Object.assign(module.exports,{
